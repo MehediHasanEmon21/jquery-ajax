@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Contactus;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
+use DB;
 class AjaxController extends Controller
 {
     public function index(){
 
-    	return view('contact');
+    	$products = DB::table('products')->orderBy('id','DESC')->get();
+    	return view('live_search',compact('products'));
 
     }
 
-    public function submit(Request $request){
+    public function getData(Request $request){
 
-    	Contactus::create($request->all());
-    	return redirect()->back()->with('success','Successfully Saved');
+    	$query = $request->input('query');
+
+    	$products = DB::table('products')->where('product_name','LIKE','%'.$query.'%')->get();
+
+    	return response()->json([
+    		'products' => $products,
+    		'product_count' => count($products)
+    	]);
 
     }
 }

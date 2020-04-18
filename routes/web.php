@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/contact_us','AjaxController@index');
-Route::post('/contact_us/submit','AjaxController@submit');
+Route::get('/live-search','AjaxController@index');
+
