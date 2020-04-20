@@ -9,21 +9,27 @@ class AjaxController extends Controller
 {
     public function index(){
 
-    	$products = DB::table('products')->orderBy('id','DESC')->get();
-    	return view('live_search',compact('products'));
+    	return view('index');
 
     }
 
     public function getData(Request $request){
 
-    	$query = $request->input('query');
+    	$query = $request->get('query');
 
-    	$products = DB::table('products')->where('product_name','LIKE','%'.$query.'%')->get();
+    	$countries = DB::table('apps_countries')->where('country_name','LIKE','%'.$query.'%')->get();
 
-    	return response()->json([
-    		'products' => $products,
-    		'product_count' => count($products)
-    	]);
+    	$output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+
+    	foreach ($countries as $country) {
+    		$output .= '
+       <li><a href="#">'.$country->country_name.'</a></li>
+       ';
+    	}
+
+    	$output .='</ul>';
+
+    	echo $output;
 
     }
 }
