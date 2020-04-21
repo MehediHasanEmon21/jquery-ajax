@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/auto-search','AjaxController@index');
+Route::get('/google/api','AjaxController@index');
 
