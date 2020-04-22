@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/google/api','AjaxController@index');
+Route::get('/pagination','AjaxController@index');
 

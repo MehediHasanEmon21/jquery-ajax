@@ -9,19 +9,18 @@ class AjaxController extends Controller
 {
     public function index(){
 
-        $data = DB::table('tbl_employee')
-               ->select(
-                'gender',
-                DB::raw('count(*) as number'))
-               ->groupBy('gender')
-               ->get();
-         $array[] = ['Gender', 'Number'];
-         foreach($data as $key => $value)
-         {
-          $array[++$key] = [$value->gender, $value->number];
-         }
+      $data = DB::table('tbl_employee')
+                ->paginate(5);
 
-    	return view('index')->with('gender', json_encode($array));
+    	return view('index',compact('data'));
+
+    }
+
+    public function fetch(){
+
+        $data = DB::table('tbl_employee')
+                ->paginate(5);
+        return view('paginate_data',compact('data'))->render();
 
     }
 

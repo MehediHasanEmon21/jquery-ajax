@@ -1,53 +1,34 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <title>Make Google Pie Chart in Laravel</title>
+  <title>Laravel Pagination using Ajax</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style type="text/css">
    .box{
-    width:800px;
+    width:600px;
     margin:0 auto;
    }
   </style>
-  <script type="text/javascript">
-   var analytics = <?php echo $gender; ?>
-
-   google.charts.load('current', {'packages':['corechart']});
-
-   google.charts.setOnLoadCallback(drawChart);
-
-   function drawChart()
-   {
-    var data = google.visualization.arrayToDataTable(analytics);
-    var options = {
-     title : 'Percentage of Male and Female Employee'
-    };
-    var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
-    chart.draw(data, options);
-   }
-  </script>
  </head>
  <body>
   <br />
   <div class="container">
-   <h3 align="center">Make Google Pie Chart in Laravel</h3><br />
-   
-   <div class="panel panel-default">
-    <div class="panel-heading">
-     <h3 class="panel-title">Percentage of Male and Female Employee</h3>
-    </div>
-    <div class="panel-body" align="center">
-     <div id="pie_chart" style="width:750px; height:450px;">
+   <h3 align="center">Laravel Pagination using Ajax</h3><br />
+   <div id="table_data">
+    
+    @include('paginate_data');
 
-     </div>
-    </div>
+
    </div>
-   
   </div>
+
+  <script src="{{ asset('ajax/custom.js') }}"></script>
  </body>
 </html>
+
+
 
 
 
