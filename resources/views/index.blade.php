@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <title>Laravel Pagination using Ajax</title>
+  <title>Upload Image in Laravel using Ajax</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style type="text/css">
-   .box{
-    width:600px;
-    margin:0 auto;
-   }
-  </style>
  </head>
  <body>
   <br />
   <div class="container">
-   <h3 align="center">Laravel Pagination using Ajax</h3><br />
-   <div id="table_data">
-    
-    @include('paginate_data');
-
-
-   </div>
+   <h3 align="center">Upload Image in Laravel using Ajax</h3>
+   <br />
+   <div class="alert" id="message" style="display: none"></div>
+   <form method="post" id="upload_form" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    <div class="form-group">
+     <table class="table">
+      <tr>
+       <td width="40%" align="right"><label>Select File for Upload</label></td>
+       <td width="30"><input type="file" name="select_file" id="select_file" /></td>
+       <td width="30%" align="left"><input type="submit" name="upload" id="upload" class="btn btn-primary" value="Upload"></td>
+      </tr>
+      <tr>
+       <td width="40%" align="right"></td>
+       <td width="30"><span class="text-muted">jpg, png, gif</span></td>
+       <td width="30%" align="left"></td>
+      </tr>
+     </table>
+    </div>
+   </form>
+   <br />
+   <span id="uploaded_image">
+     
+   </span>
   </div>
-
-  <script src="{{ asset('ajax/custom.js') }}"></script>
  </body>
 </html>
+
+
+<script src="{{ asset('ajax/custom.js') }}"></script>
 
 
 

@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/pagination','AjaxController@index');
+Route::get('/file-upload','AjaxController@index');
 

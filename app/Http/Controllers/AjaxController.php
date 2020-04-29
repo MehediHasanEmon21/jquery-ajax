@@ -3,25 +3,48 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
 use DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 class AjaxController extends Controller
 {
     public function index(){
 
-      $data = DB::table('tbl_employee')
-                ->paginate(5);
-
-    	return view('index',compact('data'));
+        return view('index');
 
     }
 
-    public function fetch(){
+    public function upload_file(Request $request){
 
-        $data = DB::table('tbl_employee')
-                ->paginate(5);
-        return view('paginate_data',compact('data'))->render();
+        $validation = Validator::make($request->all(),[
+            'select_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validation->passes()) {
+            
+            $image = $request->file('select_file');
+            $image_name = time().'-'.$image->getClientOriginalExtension();
+            $image->move(public_path('images'),$image_name);
+
+            return response()->json([
+                'message' => 'successfully uploaded',
+                'upload_image' => '<img src="/images/'.$image_name.'" style="width: 200px; height: 200px">',
+                'class_name' => 'alert-success'
+            ]);
+
+        }else{
+
+            return response()->json([
+               'message'   => $validation->errors()->all(),
+               'uploaded_image' => '',
+               'class_name'  => 'alert-danger'
+            ]);
+
+        }
+
 
     }
+
+    
 
 }

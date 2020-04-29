@@ -1,28 +1,30 @@
 $(document).ready(function(){
 
 
-	$(document).on('click','.pagination a', function(event){
 
-		event.preventDefault()
-		var page_num = $(this).attr('href').split('page=')[1]
-		fetch_data(page_num)
 
-	})
+$('#upload_form').on('submit', function(event){
 
-	function fetch_data(num){
+        event.preventDefault()
 
 		$.ajax({
 
-
-			url: '/api/pagination/fetch_data?page='+num,
-			success: function(data){
-				console.log(data)
-				$('#table_data').html(data);
+			url: '/api/upload/file',
+			method:"POST",
+			data:new FormData(this),
+			dataType:'JSON',
+			processData: false,
+			contentType: false,
+			success:function(data){
+				$('#message').css('display', 'block');
+			    $('#message').html(data.message);
+			    $('#message').addClass(data.class_name);
+			    $('#uploaded_image').html(data.upload_image);
+				
 			}
 
 		})
-
-	}
+ });
 
 
 
