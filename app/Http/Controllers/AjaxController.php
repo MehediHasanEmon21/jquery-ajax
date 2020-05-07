@@ -10,7 +10,7 @@ class AjaxController extends Controller
 {
     public function index(){
 
-        $products = DB::table('products')->orderBy('id','ASC')->paginate(5);
+        $products = DB::table('products')->orderBy('id','ASC')->get();
 
         return view('index',compact('products'));
 
@@ -18,14 +18,15 @@ class AjaxController extends Controller
 
     public function fetch_data(Request $request){
 
-	      $sort_by = $request->get('sort_by');
-	      $sort_type = $request->get('sort_type');
-	      $query = $request->get('query');
-	      $products = DB::table('products')
-	      				->where('product_name', 'like', '%'.$query.'%')
-	                    ->orderBy($sort_by, $sort_type)
-	                    ->paginate(5);
-	      return view('paginate_data', compact('products'))->render();
+	      if ($request->ajax()) {
+
+	      	$data = DB::table('products')->whereBetween('date',[$request->from, $request->to])->get();
+	      	return response()->json([
+	      		'product' => $data,
+	      		'count' => $data->count()
+	      	]);
+	      	
+	      }
 
     }
 
