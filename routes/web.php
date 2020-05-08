@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/date-range','AjaxController@index');
+Route::get('/load-more','AjaxController@index');
 
