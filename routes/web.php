@@ -15,5 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/load-more','AjaxController@index');
+Route::get('/ajax-crud','AjaxController@index');
+Route::get('/get-data','AjaxController@getData')->name('getData');
+Route::post('/store-data','AjaxController@storeData')->name('store.data');
+Route::post('/update-data','AjaxController@update')->name('update.data');
+Route::get('/ajax-crud/{id}/edit','AjaxController@edit');
+Route::get('/ajax-crud/destroy/{id}','AjaxController@destroy');
+
+
 
