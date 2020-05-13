@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dynamic-field','AjaxController@index');
-Route::post('dynamic-field/insert', 'AjaxController@insert')->name('dynamic-field.insert');
+Route::get('/parsley','AjaxController@index');
+Route::post('email-check', 'AjaxController@check')->name('email.check');
 
 
 

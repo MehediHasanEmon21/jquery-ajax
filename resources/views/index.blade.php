@@ -1,115 +1,99 @@
+<!DOCTYPE html>
 <html>
- <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laravel 5.8 - DataTables Server Side Processing using Ajax</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
- </head>
- <body>
-  <div class="container">    
-     <br />
-     <h3 align="center">Dynamically Add / Remove input fields in Laravel 5.8 using Ajax jQuery</h3>
-     <br />
-   <div class="table-responsive">
-                <form method="post" id="dynamic_form">
-                 <span id="result"></span>
-                 <table class="table table-bordered table-striped" id="user_table">
-               <thead>
-                <tr>
-                    <th width="35%">First Name</th>
-                    <th width="35%">Last Name</th>
-                    <th width="30%">Action</th>
-                </tr>
-               </thead>
-               <tbody>
+  <head>
+    <title>Live Email Availability using Parsley.js Custom Validator with PHP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.0/parsley.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style> 
+      input.parsley-success,
+       select.parsley-success,
+       textarea.parsley-success {
+         color: #468847;
+         background-color: #DFF0D8;
+         border: 1px solid #D6E9C6;
+       }
 
-               </tbody>
-               <tfoot>
-                <tr>
-                    <td colspan="2" align="right">&nbsp;</td>
-                    <td>
-                    @csrf
-                    <input type="submit" name="save" id="save" class="btn btn-primary" value="Save" />
+       input.parsley-error,
+       select.parsley-error,
+       textarea.parsley-error {
+         color: #B94A48;
+         background-color: #F2DEDE;
+         border: 1px solid #EED3D7;
+       }
 
-                    </td>
-                </tr>
-               </tfoot>
-           </table>
-                </form>
-   </div>
-  </div>
- </body>
+       .parsley-errors-list {
+         margin: 2px 0 3px;
+         padding: 0;
+         list-style-type: none;
+         font-size: 0.9em;
+         line-height: 0.9em;
+         opacity: 0;
+
+         transition: all .3s ease-in;
+         -o-transition: all .3s ease-in;
+         -moz-transition: all .3s ease-in;
+         -webkit-transition: all .3s ease-in;
+       }
+
+       .parsley-errors-list.filled {
+         opacity: 1;
+       }
+       
+       .parsley-type,
+       .parsley-required,
+       .parsley-equalto,
+       .parsley-pattern,
+       .parsley-urlstrict,
+       .parsley-length,
+       .parsley-checkemail{
+        color:#ff0000;
+       }
+    </style>
+  </head>
+  <body>
+    <br />
+    <br />
+    <div class="container">
+      <h3 align="center">Live Email Availability using Parsley.js Custom Validator with PHP</h3>
+      <br />
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="email_address" class="form-control input-lg" required placeholder="Enter Email ID" data-parsley-type="email" data-parsley-trigger="keyup" data-parsley-checkemail data-parsley-checkemail-message="Email Address already Exists" />
+        </div>
+        <div class="col-md-3">
+
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
-
 <script>
-$(document).ready(function(){
+  $(document).ready(function(){
+      
+    $('#email_address').parsley();
 
- var count = 1;
+    window.ParsleyValidator.addValidator('checkemail', {
+      validateString: function(value)
+      {
+        return $.ajax({
+          url:"/api/email-check",
+          method:"POST",
+          data:{email:value},
+          dataType:"json",
+          success:function(data)
+          {
+            return true;
+          }
+        });
+      }
+    });
 
- dynamic_field(count);
-
- function dynamic_field(number)
- {
-    var html = '<tr>'
-    html += '<td><input type="text" name="first_name[]" class="form-control"></td>'
-    html += '<td><input type="text" name="last_name[]" class="form-control"></td>'
-    if (number > 1) {
-      html += '<td><button type="button" class="btn btn-sm btn-danger" id="remove">Remove</button></td></tr>'
-      $('tbody').append(html)
-    }else{
-      html += '<td><button type="button" class="btn btn-sm btn-success" id="add">Add</button></td></tr>'
-      $('tbody').html(html)
-    }
-    
- }
-
- $(document).on('click','#add',function(){
-
-    count++;
-    dynamic_field(count)
-
-
- })
-
- $(document).on('click','#remove',function(){
-    $(this).closest('tr').remove()
- })
-
- $('#dynamic_form').on('submit', function(event){
-        event.preventDefault();
-        $.ajax({
-            url:'{{ route("dynamic-field.insert") }}',
-            method:'post',
-            data:$(this).serialize(),
-            dataType:'json',
-            beforeSend:function(){
-                $('#save').attr('disabled','disabled');
-            },
-            success:function(data)
-            {
-                if(data.error)
-                {
-                    var error_html = '';
-                    for(var count = 0; count < data.error.length; count++)
-                    {
-                        error_html += '<p>'+data.error[count]+'</p>';
-                    }
-                    $('#result').html('<div class="alert alert-danger">'+error_html+'</div>');
-                }
-                else
-                {
-                    dynamic_field(1);
-                    $('#result').html('<div class="alert alert-success">'+data.success+'</div>');
-                }
-                $('#save').attr('disabled', false);
-            }
-        })
- });
-
- 
-
-
-
-});
+  });
 </script>

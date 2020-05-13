@@ -18,42 +18,17 @@ class AjaxController extends Controller
     }
 
 
-    public function insert(Request $request)
+    public function check(Request $request)
     {
-         if($request->ajax())
-         {
-          $rules = array(
-           'first_name.*'  => 'required',
-           'last_name.*'  => 'required'
-          );
-          $error = Validator::make($request->all(), $rules);
-          if($error->fails())
-          {
-           return response()->json([
-            'error'  => $error->errors()->all()
-           ]);
-          }
+         $email = trim($request->email);
 
-          $first_name = $request->first_name;
-          $last_name = $request->last_name;
+         $emailCheck = DB::table('register_user')->where('user_email',$email)->get();
 
-          for ($i=0; $i <count($first_name) ; $i++) { 
-             
-             $data = [
-                'first_name' => $first_name[$i],
-                'last_name' => $last_name[$i],
-             ];
-
-             $insert[] = $data;
-
-          }
-
-          DynamicField::insert($insert);
-          return response()->json([
-           'success'  => 'Data Added successfully.'
-          ]);
-
+         if (count($emailCheck) == 0) {
+             $output = ['success' => true];
+             return response()->json($output);
          }
+
     }
 
     
