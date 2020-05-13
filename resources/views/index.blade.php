@@ -4,152 +4,112 @@
   <title>Laravel 5.8 - DataTables Server Side Processing using Ajax</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>  
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
  </head>
  <body>
   <div class="container">    
      <br />
-     <h3 align="center">Laravel 5.8 Ajax Crud Tutorial - Delete or Remove Data</h3>
-     <br />
-     <div align="right">
-      <button type="button" name="create_record" id="create_record" class="btn btn-success btn-sm">Create Record</button>
-     </div>
+     <h3 align="center">Dynamically Add / Remove input fields in Laravel 5.8 using Ajax jQuery</h3>
      <br />
    <div class="table-responsive">
-    <table class="table table-bordered table-striped" id="user_table">
-           <thead>
-            <tr>
-                <th width="10%">Image</th>
-                <th width="35%">First Name</th>
-                <th width="35%">Last Name</th>
-                <th width="30%">Action</th>
-            </tr>
-           </thead>
-       </table>
+                <form method="post" id="dynamic_form">
+                 <span id="result"></span>
+                 <table class="table table-bordered table-striped" id="user_table">
+               <thead>
+                <tr>
+                    <th width="35%">First Name</th>
+                    <th width="35%">Last Name</th>
+                    <th width="30%">Action</th>
+                </tr>
+               </thead>
+               <tbody>
+
+               </tbody>
+               <tfoot>
+                <tr>
+                    <td colspan="2" align="right">&nbsp;</td>
+                    <td>
+                    @csrf
+                    <input type="submit" name="save" id="save" class="btn btn-primary" value="Save" />
+
+                    </td>
+                </tr>
+               </tfoot>
+           </table>
+                </form>
    </div>
-   <br />
-   <br />
   </div>
  </body>
 </html>
 
+<script>
+$(document).ready(function(){
 
-<div id="formModal" class="modal fade" role="dialog">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add New Record</h4>
-        </div>
-        <div class="modal-body">
-         <span id="form_result"></span>
-         <form method="post" id="sample_form" class="form-horizontal" enctype="multipart/form-data">
-          @csrf
-          <div class="form-group">
-            <label class="control-label col-md-4" >First Name : </label>
-            <div class="col-md-8">
-             <input type="text" name="first_name" id="first_name" class="form-control" />
-            </div>
-           </div>
-           <div class="form-group">
-            <label class="control-label col-md-4">Last Name : </label>
-            <div class="col-md-8">
-             <input type="text" name="last_name" id="last_name" class="form-control" />
-            </div>
-           </div>
-           <div class="form-group">
-            <label class="control-label col-md-4">Select Profile Image : </label>
-            <div class="col-md-8">
-             <input type="file" name="image" id="image" />
-             <span id="store_image"></span>
-            </div>
-           </div>
-           <br />
-           <div class="form-group" align="center">
-            <input type="hidden" name="action" id="action" />
-            <input type="hidden" name="hidden_id" id="hidden_id" />
-            <input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add" />
-           </div>
-         </form>
-        </div>
-     </div>
-    </div>
-</div>
+ var count = 1;
 
-<div id="confirmModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title">Confirmation</h2>
-            </div>
-            <div class="modal-body">
-                <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
-            </div>
-            <div class="modal-footer">
-             <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+ dynamic_field(count);
 
-<script type="text/javascript">
-  
-  $(function(){
+ function dynamic_field(number)
+ {
+    var html = '<tr>'
+    html += '<td><input type="text" name="first_name[]" class="form-control"></td>'
+    html += '<td><input type="text" name="last_name[]" class="form-control"></td>'
+    if (number > 1) {
+      html += '<td><button type="button" class="btn btn-sm btn-danger" id="remove">Remove</button></td></tr>'
+      $('tbody').append(html)
+    }else{
+      html += '<td><button type="button" class="btn btn-sm btn-success" id="add">Add</button></td></tr>'
+      $('tbody').html(html)
+    }
+    
+ }
 
-    var url = @json(URL::to('/'));
-    $('#user_table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax:{
-         url: "{{ route('getData') }}",
-        },
-        columns: [
-            {
-              data: 'image',
-              name: 'image',
-              render:function(data, type, full, meta){
-                return `<img src="${url}/test/${data}" style="width: 50px; height: 50px;" class="img-fluid">`
-              },
-              orderable: false
+ $(document).on('click','#add',function(){
+
+    count++;
+    dynamic_field(count)
+
+
+ })
+
+ $(document).on('click','#remove',function(){
+    $(this).closest('tr').remove()
+ })
+
+ $('#dynamic_form').on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url:'{{ route("dynamic-field.insert") }}',
+            method:'post',
+            data:$(this).serialize(),
+            dataType:'json',
+            beforeSend:function(){
+                $('#save').attr('disabled','disabled');
             },
+            success:function(data)
             {
-              data: 'first_name',
-              name: 'first_name'
-             },
-             {
-              data: 'last_name',
-              name: 'last_name'
-             },
-             {
-              data: 'action',
-              name: 'action',
-              orderable: false
-             }
-        ]
-    });
+                if(data.error)
+                {
+                    var error_html = '';
+                    for(var count = 0; count < data.error.length; count++)
+                    {
+                        error_html += '<p>'+data.error[count]+'</p>';
+                    }
+                    $('#result').html('<div class="alert alert-danger">'+error_html+'</div>');
+                }
+                else
+                {
+                    dynamic_field(1);
+                    $('#result').html('<div class="alert alert-success">'+data.success+'</div>');
+                }
+                $('#save').attr('disabled', false);
+            }
+        })
+ });
 
-  })
+ 
 
 
 
-
+});
 </script>
-
-
-
-
-
-
-<script src="{{ asset('ajax/custom.js') }}"></script>
-
-
-
-
-
-
-
