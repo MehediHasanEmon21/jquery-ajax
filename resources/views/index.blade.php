@@ -1,99 +1,48 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Live Email Availability using Parsley.js Custom Validator with PHP</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.0/parsley.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style> 
-      input.parsley-success,
-       select.parsley-success,
-       textarea.parsley-success {
-         color: #468847;
-         background-color: #DFF0D8;
-         border: 1px solid #D6E9C6;
-       }
-
-       input.parsley-error,
-       select.parsley-error,
-       textarea.parsley-error {
-         color: #B94A48;
-         background-color: #F2DEDE;
-         border: 1px solid #EED3D7;
-       }
-
-       .parsley-errors-list {
-         margin: 2px 0 3px;
-         padding: 0;
-         list-style-type: none;
-         font-size: 0.9em;
-         line-height: 0.9em;
-         opacity: 0;
-
-         transition: all .3s ease-in;
-         -o-transition: all .3s ease-in;
-         -moz-transition: all .3s ease-in;
-         -webkit-transition: all .3s ease-in;
-       }
-
-       .parsley-errors-list.filled {
-         opacity: 1;
-       }
-       
-       .parsley-type,
-       .parsley-required,
-       .parsley-equalto,
-       .parsley-pattern,
-       .parsley-urlstrict,
-       .parsley-length,
-       .parsley-checkemail{
-        color:#ff0000;
-       }
-    </style>
-  </head>
-  <body>
-    <br />
-    <br />
-    <div class="container">
-      <h3 align="center">Live Email Availability using Parsley.js Custom Validator with PHP</h3>
-      <br />
-      <br />
-      <br />
-      <div class="row">
-        <div class="col-md-3">
-
-        </div>
-        <div class="col-md-6">
-          <input type="text" id="email_address" class="form-control input-lg" required placeholder="Enter Email ID" data-parsley-type="email" data-parsley-trigger="keyup" data-parsley-checkemail data-parsley-checkemail-message="Email Address already Exists" />
-        </div>
-        <div class="col-md-3">
-
-        </div>
-      </div>
-    </div>
-  </body>
+ <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laravel 5.8 - Daterange Filter in Datatables with Server-side Processing</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>  
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+ </head>
+ <body>
+  <div class="container">    
+     <br />
+     <h3 align="center">Laravel 5.8 - Daterange Filter in Datatables with Server-side Processing</h3>
+     <br />
+            <br />
+            <div class="row input-daterange">
+                <div class="col-md-4">
+                    <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly />
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly />
+                </div>
+                <div class="col-md-4">
+                    <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
+                    <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
+                </div>
+            </div>
+            <br />
+   <div class="table-responsive">
+    <table class="table table-bordered table-striped" id="order_table">
+           <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+            </tr>
+           </thead>
+       </table>
+   </div>
+  </div>
+  <script src="{{ asset('ajax/custom.js') }}"></script>
+ </body>
 </html>
-<script>
-  $(document).ready(function(){
-      
-    $('#email_address').parsley();
 
-    window.ParsleyValidator.addValidator('checkemail', {
-      validateString: function(value)
-      {
-        return $.ajax({
-          url:"/api/email-check",
-          method:"POST",
-          data:{email:value},
-          dataType:"json",
-          success:function(data)
-          {
-            return true;
-          }
-        });
-      }
-    });
-
-  });
-</script>

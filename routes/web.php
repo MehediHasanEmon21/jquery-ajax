@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/parsley','AjaxController@index');
-Route::post('email-check', 'AjaxController@check')->name('email.check');
+Route::get('/date-range','AjaxController@index');
+Route::get('/filter-data', 'AjaxController@getData');
 
 
 

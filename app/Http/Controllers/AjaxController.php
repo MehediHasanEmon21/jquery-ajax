@@ -12,24 +12,30 @@ class AjaxController extends Controller
 {
     public function index(){
     	
-    
         return view('index');
 
     }
 
+    public function getData(Request $request){
 
-    public function check(Request $request)
-    {
-         $email = trim($request->email);
+        if(!empty($request->from_date))
+          {
+           $data = DB::table('tbl_products')
+             ->whereBetween('date', array($request->from_date, $request->to_date))
+             ->get();
+          }
+          else
+          {
+           $data = DB::table('tbl_products')
+             ->get();
+          }
 
-         $emailCheck = DB::table('register_user')->where('user_email',$email)->get();
-
-         if (count($emailCheck) == 0) {
-             $output = ['success' => true];
-             return response()->json($output);
-         }
+          return datatables()->of($data)->make(true);
 
     }
+
+
+   
 
     
 
