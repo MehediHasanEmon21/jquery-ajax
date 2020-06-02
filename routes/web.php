@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/date-range','AjaxController@index');
-Route::get('/filter-data', 'AjaxController@getData');
+Route::get('/image-crop','AjaxController@index');
+Route::post('/image-upload', 'AjaxController@upload')->name('image_crop.upload');
 
 
 

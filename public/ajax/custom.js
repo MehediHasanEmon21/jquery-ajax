@@ -1,60 +1,66 @@
 
-$(function(){
+$(document).ready(function(){
 
-	$('.input-daterange').datepicker({
-	  todayBtn:'linked',
-	  format:'yyyy-mm-dd',
-	  autoclose:true
-	 });
+    fill_datatable();
 
-	 load_data();
+    function fill_datatable(filter_gender = '', filter_country = '')
+    {
+        var dataTable = $('#customer_data').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax:{
+                url: "/filter-data",
+                data:{filter_gender:filter_gender, filter_country:filter_country}
+            },
+            columns: [
+                {
+                    data:'CustomerName',
+                    name:'CustomerName'
+                },
+                {
+                    data:'Gender',
+                    name:'Gender'
+                },
+                {
+                    data:'Address',
+                    name:'Address'
+                },
+                {
+                    data:'City',
+                    name:'City'
+                },
+                {
+                    data:'PostalCode',
+                    name:'PostalCode'
+                },
+                {
+                    data:'Country',
+                    name:'Country'
+                }
+            ]
+        });
+    }
 
-	  function load_data(from_date = '', to_date = '')
-	 {
-		  $('#order_table').DataTable({
-		   processing: true,
-		   serverSide: true,
-		   ajax: {
-		    url:'/filter-data',
-		    data:{from_date:from_date, to_date:to_date}
-		   },
-		   columns: [
-		    {
-		     data:'id',
-		     name:'id'
-		    },
-		    {
-		     data:'product_name',
-		     name:'product_name'
-		    },
-		    {
-		     data:'product_quantity',
-		     name:'product_quantity'
-		    },
-		   ]
-		  });
-	 }
+    $('#filter').click(function(){
+        var filter_gender = $('#filter_gender').val();
+        var filter_country = $('#filter_country').val();
 
-	  $('#filter').click(function(){
-		  var from_date = $('#from_date').val();
-		  var to_date = $('#to_date').val();
-		  if(from_date != '' &&  to_date != '')
-		  {
-		   $('#order_table').DataTable().destroy();
-		   load_data(from_date, to_date);
-		  }
-		  else
-		  {
-		   alert('Both Date is required');
-		  }
-		});
+        if(filter_gender != '' &&  filter_gender != '')
+        {
+            $('#customer_data').DataTable().destroy();
+            fill_datatable(filter_gender, filter_country);
+        }
+        else
+        {
+            alert('Select Both filter option');
+        }
+    });
 
-	  $('#refresh').click(function(){
-		  $('#from_date').val('');
-		  $('#to_date').val('');
-		  $('#order_table').DataTable().destroy();
-		  load_data();
-	  });
+    $('#reset').click(function(){
+        $('#filter_gender').val('');
+        $('#filter_country').val('');
+        $('#customer_data').DataTable().destroy();
+        fill_datatable();
+    });
 
-
-})
+});

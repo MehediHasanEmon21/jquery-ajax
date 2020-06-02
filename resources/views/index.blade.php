@@ -1,48 +1,100 @@
 <html>
  <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laravel 5.8 - Daterange Filter in Datatables with Server-side Processing</title>
+  <title>How to Crop And Upload Image in Laravel 6 using jQuery Ajax</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>  
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
  </head>
  <body>
   <div class="container">    
-     <br />
-     <h3 align="center">Laravel 5.8 - Daterange Filter in Datatables with Server-side Processing</h3>
-     <br />
-            <br />
-            <div class="row input-daterange">
-                <div class="col-md-4">
-                    <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly />
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly />
-                </div>
-                <div class="col-md-4">
-                    <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
-                    <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
-                </div>
+    <br />
+        <h3 align="center">How to Crop And Upload Image in Laravel 6 using jQuery Ajax</h3>
+      <br />
+      <div class="card">
+        <div class="card-header">Crop and Upload Image</div>
+        <div class="card-body">
+          <div class="form-group">
+            @csrf
+            <div class="row">
+              <div class="col-md-4" style="border-right:1px solid #ddd;">
+                <div id="image-preview"></div>
+              </div>
+              <div class="col-md-4" style="padding:75px; border-right:1px solid #ddd;">
+                <p><label>Select Image</label></p>
+                <input type="file" name="upload_image" id="upload_image" />
+                <br />
+                <br />
+                <button class="btn btn-success crop_image">Crop & Upload Image</button>
+              </div>
+              <div class="col-md-4" style="padding:75px;background-color: #333">
+                <div id="uploaded_image" align="center"></div>
+              </div>
             </div>
-            <br />
-   <div class="table-responsive">
-    <table class="table table-bordered table-striped" id="order_table">
-           <thead>
-            <tr>
-                <th>ID</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-            </tr>
-           </thead>
-       </table>
-   </div>
-  </div>
-  <script src="{{ asset('ajax/custom.js') }}"></script>
+          </div>
+        </div>
+      </div>
+      <br />
+          <br />
+          
+          <br />
+          <br />
+    </div>
  </body>
 </html>
+{{--   <script src="{{ asset('ajax/custom.js') }}"></script> --}}
+
+<script>  
+$(document).ready(function(){
+  
+  $image_crop = $('#image-preview').croppie({
+    enableExif:true,
+    viewport:{
+      width:200,
+      height:200,
+      type:'circle'
+    },
+    boundary:{
+      width:300,
+      height:300
+    }
+  });
+
+  $('#upload_image').change(function(){
+    var reader = new FileReader();
+
+    reader.onload = function(event){
+      $image_crop.croppie('bind', {
+        url:event.target.result
+      }).then(function(){
+        console.log('jQuery bind complete');
+      });
+    }
+    reader.readAsDataURL(this.files[0]);
+  });
+
+  $('.crop_image').click(function(event){
+    $image_crop.croppie('result', {
+      type:'canvas',
+      size:'viewport'
+    }).then(function(response){
+      var _token = $('input[name=_token]').val();
+      $.ajax({
+        url:'{{ route("image_crop.upload") }}',
+        type:'post',
+        data:{"image":response, _token:_token},
+        dataType:"json",
+        success:function(data)
+        {
+          var crop_image = '<img src="'+data.path+'" />';
+          $('#uploaded_image').html(crop_image);
+        }
+      });
+    });
+  });
+  
+});  
+</script>
 
